@@ -58,10 +58,10 @@ function findGroup(x, y, visited, group) {
 
     // перебираем каждый элемент массива directions
     for (const {dx, dy} of directions) {
-        const nx = x + dx; // координата x c учетом направления
-        const ny = y + dy;
+        let nx = x + dx; // координата x c учетом направления
+        let ny = y + dy;
         // проверки: координаты не выходят за границы сетки и соседний шарик совпадает по цвету
-        if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize && gridSize[nx][ny].color === color) {
+        if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize && grid[nx][ny].color === color) {
             findGroup(nx, ny, visited, group);
         }
     }
@@ -78,7 +78,7 @@ window.addEventListener('click', (event) => {
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, camera);
     // переменная для проверки того, с какими объектами пересекается луч
-    const intersects = raycaster.intersectObject(scene.children, true); // берем луч и применяем метод ко всем объектам сцены
+    const intersects = raycaster.intersectObjects(scene.children, true); // берем луч и применяем метод ко всем объектам сцены
     // если лучи пересекаются хотя бы с одним объектом, т. е. объект intersects не пустой
     if(intersects.length > 0) {
         // положим в переменную clickObject первый объект, встреченный на пути луча, индекс[0] т.к. это первый клик
@@ -94,7 +94,7 @@ window.addEventListener('click', (event) => {
         const visited = Array.from({length: gridSize}, () => Array(gridSize).fill(false));
         // создаем пустой массив для групп шариков одного цвета
         const group = [];
-        findGroup(nx, ny, visited, group); // вызываем функцию поиска групп шариков одного цвета
+        findGroup(x, y, visited, group); // вызываем функцию поиска групп шариков одного цвета
         // если кол-во шаров в массиве больше 3, то
         if(group.length >= 3) {
             group.forEach(({x, y}) => {
